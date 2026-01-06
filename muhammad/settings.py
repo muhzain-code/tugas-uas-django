@@ -40,8 +40,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'zainul',
     'hasan',
-    'webzainul'
+    'webzainul',
+    'restapizain',
+    'rest_framework',
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
+    "DEFAULT_PARSER_CLASSES": ["rest_framework.parsers.JSONParser"],
+    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
