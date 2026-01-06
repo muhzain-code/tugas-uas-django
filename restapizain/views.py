@@ -21,6 +21,11 @@ from .serializers import (
     WaliSerializer,
     JenisBerkasSerializer,
 )
+from rest_framework.response import Response
+from rest_framework import status, permissions
+from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
 
 class TahunViewSet(ModelViewSet):
     queryset = TahunAkademik.objects.all()
@@ -57,3 +62,37 @@ class WaliViewSet(ModelViewSet):
 class JenisBerkasViewSet(ModelViewSet):
     queryset = JenisBerkas.objects.all()
     serializer_class = JenisBerkasSerializer
+
+class LogoutTokenView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        Token.objects.filter(user=request.user).delete()
+        return Response(
+            {"detail": "Token dihapus (logout)."},
+            status=status.HTTP_200_OK,
+        )
+
+class LogoutJWTView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        refresh_token = request.data.get("refresh", None)
+        if not refresh_token:
+            return Response(
+                {"detail": "Refresh token tidak ditemukan di body."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(
+                {"detail": "Refresh token di-blacklist."},
+                status=status.HTTP_205_RESET_CONTENT,
+            )
+        except Exception:
+            return Response(
+                {"detail": "Refresh token tidak valid atau sudah di-blacklist."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
