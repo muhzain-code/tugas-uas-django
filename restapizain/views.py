@@ -9,6 +9,8 @@ from zainul.models import (
     Jurusan,
     Wali,
     JenisBerkas,
+    Siswa,
+    Berkas,
 )
 from .serializers import (
     TahunAkademikSerializer,
@@ -20,6 +22,8 @@ from .serializers import (
     JurusanSerializer,
     WaliSerializer,
     JenisBerkasSerializer,
+    SiswaSerializer,
+    BerkasSerializer,
 )
 from rest_framework.response import Response
 from rest_framework import status, permissions
@@ -27,41 +31,51 @@ from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 
+
 class TahunViewSet(ModelViewSet):
     queryset = TahunAkademik.objects.all()
     serializer_class = TahunAkademikSerializer
+
 
 class NegaraViewSet(ModelViewSet):
     queryset = Negara.objects.all()
     serializer_class = NegaraSerializer
 
+
 class ProvinsiViewSet(ModelViewSet):
     queryset = Provinsi.objects.all()
     serializer_class = ProvinsiSerializer
+
 
 class KabupatenKotaViewSet(ModelViewSet):
     queryset = KabupatenKota.objects.all()
     serializer_class = KabupatenKotaSerializer
 
+
 class KecamatanViewSet(ModelViewSet):
     queryset = Kecamatan.objects.all()
     serializer_class = KecamatanSerializer
+
 
 class DesaKelurahanViewSet(ModelViewSet):
     queryset = DesaKelurahan.objects.all()
     serializer_class = DesaKelurahanSerializer
 
+
 class JurusanViewSet(ModelViewSet):
     queryset = Jurusan.objects.all()
     serializer_class = JurusanSerializer
+
 
 class WaliViewSet(ModelViewSet):
     queryset = Wali.objects.all()
     serializer_class = WaliSerializer
 
+
 class JenisBerkasViewSet(ModelViewSet):
     queryset = JenisBerkas.objects.all()
     serializer_class = JenisBerkasSerializer
+
 
 class LogoutTokenView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -72,6 +86,7 @@ class LogoutTokenView(APIView):
             {"detail": "Token dihapus (logout)."},
             status=status.HTTP_200_OK,
         )
+
 
 class LogoutJWTView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -96,3 +111,21 @@ class LogoutJWTView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+
+class SiswaViewSet(ModelViewSet):
+    queryset = Siswa.objects.all().select_related(
+        "tahun_akademik",
+        "jurusan",
+        "wali",
+        "negara",
+        "provinsi",
+        "kabupaten",
+        "kecamatan",
+        "desa",
+    )
+    serializer_class = SiswaSerializer
+
+
+class BerkasViewSet(ModelViewSet):
+    queryset = Berkas.objects.all().select_related("siswa", "jenis")
+    serializer_class = BerkasSerializer

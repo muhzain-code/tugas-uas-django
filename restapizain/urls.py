@@ -10,9 +10,10 @@ from .views import (
     JurusanViewSet,
     WaliViewSet,
     JenisBerkasViewSet,
+    SiswaViewSet,
+    BerkasViewSet,
     LogoutTokenView,
     LogoutJWTView,
-
 )
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -27,6 +28,8 @@ router.register(r"desa-kelurahan", DesaKelurahanViewSet, basename="desa-keluraha
 router.register(r"jurusan", JurusanViewSet, basename="jurusan")
 router.register(r"wali", WaliViewSet, basename="wali")
 router.register(r"jenis-berkas", JenisBerkasViewSet, basename="jenis-berkas")
+router.register(r"siswa", SiswaViewSet, basename="siswa")
+router.register(r"berkas", BerkasViewSet, basename="berkas")
 
 urlpatterns = [
     path("", include(router.urls)),

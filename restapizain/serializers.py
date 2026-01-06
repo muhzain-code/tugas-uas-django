@@ -9,6 +9,8 @@ from zainul.models import (
     Jurusan,
     Wali,
     JenisBerkas,
+    Siswa,
+    Berkas,
 )
 
 
@@ -73,3 +75,54 @@ class JenisBerkasSerializer(serializers.ModelSerializer):
     class Meta:
         model = JenisBerkas
         fields = "__all__"
+
+
+class BerkasSerializer(serializers.ModelSerializer):
+    siswa_nama = serializers.ReadOnlyField(source="siswa.nama")
+    jenis_nama = serializers.ReadOnlyField(source="jenis.nama")
+
+    class Meta:
+        model = Berkas
+        fields = [
+            "id",
+            "siswa",
+            "siswa_nama",
+            "jenis",
+            "jenis_nama",
+            "file",
+            "keterangan",
+            "tanggal_upload",
+            "diverifikasi",
+        ]
+        read_only_fields = ["tanggal_upload"]
+
+
+class SiswaSerializer(serializers.ModelSerializer):
+    alamat_lengkap = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Siswa
+        fields = [
+            "id",
+            "nama",
+            "nisn",
+            "email",
+            "tanggal_daftar",
+            "foto",
+            "tahun_akademik",
+            "jurusan",
+            "nik",
+            "tempat_lahir",
+            "tanggal_lahir",
+            "jenis_kelamin",
+            "agama",
+            "wali",
+            "status_pendaftaran",
+            "negara",
+            "provinsi",
+            "kabupaten",
+            "kecamatan",
+            "desa",
+            "alamat_detail",
+            "alamat_lengkap",  
+        ]
