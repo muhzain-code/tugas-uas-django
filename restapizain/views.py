@@ -1,43 +1,59 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from django.shortcuts import get_object_or_404
-from zainul.models import TahunAkademik
-from .serializers import TahunAkademikSerializer
+from rest_framework.viewsets import ModelViewSet
+from zainul.models import (
+    TahunAkademik,
+    Negara,
+    Provinsi,
+    KabupatenKota,
+    Kecamatan,
+    DesaKelurahan,
+    Jurusan,
+    Wali,
+    JenisBerkas,
+)
+from .serializers import (
+    TahunAkademikSerializer,
+    NegaraSerializer,
+    ProvinsiSerializer,
+    KabupatenKotaSerializer,
+    KecamatanSerializer,
+    DesaKelurahanSerializer,
+    JurusanSerializer,
+    WaliSerializer,
+    JenisBerkasSerializer,
+)
 
+class TahunViewSet(ModelViewSet):
+    queryset = TahunAkademik.objects.all()
+    serializer_class = TahunAkademikSerializer
 
-@api_view(["GET", "POST"])
-def tahun_list_create(request):
-    if request.method == "GET":
-        qs = TahunAkademik.objects.all().order_by("-mulai")
-        return Response(TahunAkademikSerializer(qs, many=True).data)
+class NegaraViewSet(ModelViewSet):
+    queryset = Negara.objects.all()
+    serializer_class = NegaraSerializer
 
-    ser = TahunAkademikSerializer(data=request.data)
-    if ser.is_valid():
-        ser.save()
-        return Response(ser.data, status=status.HTTP_201_CREATED)
+class ProvinsiViewSet(ModelViewSet):
+    queryset = Provinsi.objects.all()
+    serializer_class = ProvinsiSerializer
 
-    return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+class KabupatenKotaViewSet(ModelViewSet):
+    queryset = KabupatenKota.objects.all()
+    serializer_class = KabupatenKotaSerializer
 
+class KecamatanViewSet(ModelViewSet):
+    queryset = Kecamatan.objects.all()
+    serializer_class = KecamatanSerializer
 
-@api_view(["GET", "PUT", "PATCH", "DELETE"])
-def tahun_detail(request, pk):
-    obj = get_object_or_404(TahunAkademik, pk=pk)
+class DesaKelurahanViewSet(ModelViewSet):
+    queryset = DesaKelurahan.objects.all()
+    serializer_class = DesaKelurahanSerializer
 
-    if request.method == "GET":
-        return Response(TahunAkademikSerializer(obj).data)
+class JurusanViewSet(ModelViewSet):
+    queryset = Jurusan.objects.all()
+    serializer_class = JurusanSerializer
 
-    if request.method in ["PUT", "PATCH"]:
-        ser = TahunAkademikSerializer(
-            obj,
-            data=request.data,
-            partial=request.method == "PATCH"
-        )
-        if ser.is_valid():
-            ser.save()
-            return Response(ser.data)
+class WaliViewSet(ModelViewSet):
+    queryset = Wali.objects.all()
+    serializer_class = WaliSerializer
 
-        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    obj.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+class JenisBerkasViewSet(ModelViewSet):
+    queryset = JenisBerkas.objects.all()
+    serializer_class = JenisBerkasSerializer
