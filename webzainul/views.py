@@ -1,3 +1,11 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def index(request):
+    """Landing page view"""
+    return render(request, "webzainul/index.html")
+
+
+def login_page(request):
+    """Login page view"""
+    return render(request, "webzainul/login.html")

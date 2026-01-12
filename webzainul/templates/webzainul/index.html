@@ -1,0 +1,362 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSB - Penerimaan Siswa Baru</title>
+    <meta name="description"
+        content="Pendaftaran Siswa Baru - Wujudkan masa depan cemerlang bersama kami. Daftar sekarang dan raih prestasi gemilang!">
+    <link rel="stylesheet" href="{% static 'landing/output.css' %}">
+    <link rel="shortcut icon" href="{% static 'landing/assets/favicon.ico' %}" type="image/x-icon">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav id="navbar"
+        class="flex items-center justify-between fixed z-50 top-0 w-full px-6 md:px-16 lg:px-24 xl:px-32 py-4 backdrop-blur bg-black/50">
+        <a href="#beranda" class="shrink-0 flex items-center" style="gap: 0.5rem;">
+            <div
+                style="width: 40px; height: 40px; background: linear-gradient(135deg, #9333ea, #7c3aed); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                </svg>
+            </div>
+            <span style="font-size: 1.5rem; font-weight: 700; color: #ffffff;">PSB</span>
+        </a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center" style="gap: 2rem;">
+            <a href="#beranda" class="text-sm hover:text-purple-400 transition">Beranda</a>
+            <a href="#alur" class="text-sm hover:text-purple-400 transition">Alur Pendaftaran</a>
+            <a href="#persyaratan" class="text-sm hover:text-purple-400 transition">Persyaratan</a>
+            <a href="#biaya" class="text-sm hover:text-purple-400 transition">Biaya</a>
+            <a href="#faq" class="text-sm hover:text-purple-400 transition">FAQ</a>
+        </div>
+
+        <!-- Desktop Buttons -->
+        <div class="hidden md:flex items-center" style="gap: 0.75rem;">
+            <a href="{% url 'webzainul:login' %}"
+                class="px-4 py-2 text-sm border border-purple-500 hover:bg-purple-500/20 transition rounded-md">
+                Login
+            </a>
+            <a href="{% url 'hasan:daftar' %}"
+                class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-700 transition text-white rounded-md">
+                Daftar
+            </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="openMenu" class="md:hidden p-2 hover:bg-white/10 rounded-md transition">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 12h16" />
+                <path d="M4 18h16" />
+                <path d="M4 6h16" />
+            </svg>
+        </button>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobileMenu"
+            class="fixed inset-0 flex flex-col items-center justify-center gap-6 text-lg font-medium bg-black/90 backdrop-blur-md md:hidden transition duration-300 -translate-x-full z-50">
+            <a href="#beranda" class="hover:text-purple-400 transition">Beranda</a>
+            <a href="#alur" class="hover:text-purple-400 transition">Alur Pendaftaran</a>
+            <a href="#persyaratan" class="hover:text-purple-400 transition">Persyaratan</a>
+            <a href="#biaya" class="hover:text-purple-400 transition">Biaya</a>
+            <a href="#faq" class="hover:text-purple-400 transition">FAQ</a>
+            <div class="flex flex-col gap-3 mt-4 w-48">
+                <a href="{% url 'webzainul:login' %}"
+                    class="w-full px-4 py-2.5 text-center border border-purple-500 hover:bg-purple-500/20 transition rounded-md">
+                    Login
+                </a>
+                <a href="{% url 'hasan:daftar' %}"
+                    class="w-full px-4 py-2.5 text-center bg-purple-600 hover:bg-purple-700 transition text-white rounded-md">
+                    Daftar
+                </a>
+            </div>
+            <button id="closeMenu"
+                class="absolute top-4 right-6 size-10 flex items-center justify-center bg-purple-600 hover:bg-purple-700 transition text-white rounded-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+
+    <!-- Hero Section -->
+    <div id="beranda" class="flex flex-col items-center justify-center text-center px-4 bg-black bg-no-repeat bg-cover">
+        <div class="px-6 py-3 mt-46 rounded-full border border-slate-600 bg-slate-800/50">
+            <p class="text-sm text-slate-300">Pendaftaran Tahun Ajaran 2025/2026 Dibuka!</p>
+        </div>
+        <h1 class="mt-2 text-5xl/15 md:text-[64px]/19 font-semibold max-w-3xl">
+            Wujudkan Masa Depan
+            <span
+                class="bg-gradient-to-r from-[#923FEF] dark:from-[#C99DFF] to-[#C35DE8] dark:to-[#E1C9FF] bg-clip-text text-transparent">Cemerlang</span>
+        </h1>
+        <p class="text-base dark:text-slate-300 max-w-lg mt-2">
+            Bergabunglah bersama kami dan raih prestasi gemilang. Pendaftaran siswa baru kini dibuka secara online.
+        </p>
+        <div class="flex items-center gap-4 mt-8">
+            <a href="{% url 'hasan:daftar' %}"
+                class="bg-purple-600 hover:bg-purple-700 transition text-white rounded-md px-6 h-11 flex items-center">
+                Daftar Sekarang
+            </a>
+            <a href="#alur"
+                class="flex items-center gap-2 border border-purple-900 transition text-slate-600 dark:text-white rounded-md px-6 h-11">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-list-checks">
+                    <path d="m3 17 2 2 4-4" />
+                    <path d="m3 7 2 2 4-4" />
+                    <path d="M13 6h8" />
+                    <path d="M13 12h8" />
+                    <path d="M13 18h8" />
+                </svg>
+                <span>Lihat Alur</span>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Alur Pendaftaran Section -->
+    <div id="alur" class="text-center px-6 md:px-16 lg:px-24 xl:px-32">
+        <p
+            class="text-center font-medium text-indigo-600 dark:text-indigo-400 mt-28 px-10 py-2 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-max mx-auto">
+            Alur Pendaftaran</p>
+        <h2 class="text-3xl font-semibold text-center mx-auto mt-4">Langkah Mudah Mendaftar</h2>
+        <p class="mt-2 text-slate-500 dark:text-slate-300 max-w-xl mx-auto px-4">
+            Ikuti 4 langkah sederhana berikut untuk mendaftar sebagai siswa baru.
+        </p>
+        <br><br>
+        <!-- Timeline Container - Horizontal Single Row -->
+        <div class="mt-12 overflow-x-auto pb-4">
+            <div id="timeline" class="flex items-stretch justify-center gap-0 min-w-max mx-auto"></div>
+        </div>
+    </div>
+
+    <!-- Persyaratan Section -->
+    <div id="persyaratan" class="relative mt-28 px-6 md:px-16 lg:px-24 xl:px-32">
+        <img id="colorSplash" class="absolute -mt-20 md:-mt-60 md:left-20 pointer-events-none"
+            src="{% static 'landing/assets/color-splash.svg' %}" alt="color-splash" width="1000" height="1000">
+
+        <div class="text-center">
+            <p
+                class="text-center font-medium text-indigo-600 dark:text-indigo-400 px-10 py-2 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-max mx-auto">
+                Persyaratan</p>
+            <h2 class="text-3xl font-semibold text-center mx-auto mt-4">Dokumen yang Diperlukan</h2>
+            <p class="mt-2 text-slate-500 dark:text-slate-300 max-w-xl mx-auto">
+                Siapkan dokumen-dokumen berikut sebelum melakukan pendaftaran.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mt-10">
+            <!-- Dokumen Utama -->
+            <div class="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-800/20">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="flex items-center justify-center size-10 rounded-lg bg-purple-600/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                            class="text-purple-500">
+                            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+                            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                            <path d="M10 9H8" />
+                            <path d="M16 13H8" />
+                            <path d="M16 17H8" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold">Dokumen Utama</h3>
+                </div>
+                <ul class="space-y-3 text-slate-600 dark:text-slate-300">
+                    <li class="flex items-start gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" class="text-purple-500 mt-0.5 shrink-0">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                        <span>Fotokopi Akta Kelahiran</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" class="text-purple-500 mt-0.5 shrink-0">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                        <span>Fotokopi Kartu Keluarga (KK)</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" class="text-purple-500 mt-0.5 shrink-0">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                        <span>Fotokopi Ijazah/SKHUN (jika ada)</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" class="text-purple-500 mt-0.5 shrink-0">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                        <span>Pas Foto 3x4 (4 lembar)</span>
+                    </li>
+                </ul>
+            </div>
+            <br>
+            <!-- Dokumen Pendukung -->
+            <div class="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-800/20">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="flex items-center justify-center size-10 rounded-lg bg-indigo-600/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                            class="text-indigo-500">
+                            <path d="M16 22h2a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3" />
+                            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                            <circle cx="8" cy="16" r="6" />
+                            <path d="M9.5 17.5 8 16.25V14" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold">Dokumen Pendukung</h3>
+                </div>
+                <ul class="space-y-3 text-slate-600 dark:text-slate-300">
+                    <li class="flex items-start gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" class="text-indigo-500 mt-0.5 shrink-0">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                        <span>Surat Keterangan Sehat dari Dokter</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" class="text-indigo-500 mt-0.5 shrink-0">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                        <span>Fotokopi KTP Orang Tua/Wali</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" class="text-indigo-500 mt-0.5 shrink-0">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                        <span>Sertifikat Prestasi (jika ada)</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" class="text-indigo-500 mt-0.5 shrink-0">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                        <span>Bukti Pembayaran Pendaftaran</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biaya Section -->
+    <div id="biaya" class="relative">
+        <p
+            class="text-center font-medium text-indigo-600 dark:text-indigo-400 mt-28 px-10 py-2 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-max mx-auto">
+            BIAYA</p>
+        <h3 class="text-3xl font-semibold text-center mx-auto mt-4">Rincian Biaya Pendaftaran</h3>
+        <p class="text-slate-600 dark:text-slate-300 text-center mt-2 max-w-lg mx-auto px-4">Biaya pendaftaran yang
+            transparan dan terjangkau untuk semua kalangan.</p>
+
+        <div id="pricing" class="flex flex-wrap items-center justify-center gap-6 mt-16"></div>
+    </div>
+
+    <!-- Faq Section -->
+    <div id="faq" class="relative max-w-xl mx-auto flex flex-col items-center justify-center px-4 md:px-0 mt-20">
+        <img id="faqSplash" class="absolute -mb-120 -left-40 -z-10" src="{% static 'landing/assets/color-splash.svg' %}"
+            alt="color-splash" width="1000" height="1000">
+
+        <div class="text-center">
+            <p
+                class="text-center font-medium text-indigo-600 dark:text-indigo-400 mt-28 px-10 py-2 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-max mx-auto">
+                FAQ</p>
+            <h2 class="text-3xl font-semibold text-center mx-auto mt-4">Pertanyaan Umum</h2>
+            <p class="mt-2 text-slate-500 dark:text-slate-300 max-w-xl mx-auto">
+                Temukan jawaban atas pertanyaan yang sering diajukan seputar pendaftaran siswa baru.
+            </p>
+        </div>
+
+        <div id="faq-container" class="mt-8 w-full"></div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="flex flex-col items-center text-center justify-center mt-20 px-4">
+        <h3 class="text-3xl font-semibold mt-16 mb-4">Siap Bergabung Bersama Kami?</h3>
+        <p class="text-slate-600 dark:text-slate-200 max-w-xl mx-auto">
+            Jangan lewatkan kesempatan untuk menjadi bagian dari keluarga besar kami. Daftar sekarang dan wujudkan
+            impianmu!
+        </p>
+        <div class="flex items-center gap-4 mt-8">
+            <a href="{% url 'hasan:daftar' %}"
+                class="bg-purple-600 hover:bg-purple-700 transition text-white rounded-md px-6 h-11 flex items-center">
+                Daftar Sekarang
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="relative px-6 md:px-16 lg:px-24 xl:px-32 mt-40 w-full dark:text-slate-50">
+        <div
+            class="flex flex-col md:flex-row justify-between w-full gap-10 border-b border-gray-200 dark:border-slate-700 pb-6">
+            <div class="md:max-w-114">
+                <a href="#beranda" class="flex items-center" style="gap: 0.5rem;">
+                    <div
+                        style="width: 40px; height: 40px; background: linear-gradient(135deg, #9333ea, #7c3aed); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                        </svg>
+                    </div>
+                    <span style="font-size: 1.75rem; font-weight: 700; color: #ffffff;">PSB</span>
+                </a>
+                <p class="mt-6">
+                    Lembaga pendidikan yang berkomitmen membentuk generasi unggul, berakhlak mulia, dan berprestasi.
+                    Bergabunglah bersama kami untuk masa depan yang lebih cerah.
+                </p>
+            </div>
+            <div class="flex-1 flex items-start md:justify-end gap-20">
+                <div>
+                    <h2 class="font-semibold mb-5">Menu</h2>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="#beranda" class="hover:text-purple-600 transition">Beranda</a>
+                        </li>
+                        <li>
+                            <a href="#alur" class="hover:text-purple-600 transition">Alur Pendaftaran</a>
+                        </li>
+                        <li>
+                            <a href="#persyaratan" class="hover:text-purple-600 transition">Persyaratan</a>
+                        </li>
+                        <li>
+                            <a href="#biaya" class="hover:text-purple-600 transition">Biaya</a>
+                        </li>
+                        <li>
+                            <a href="#faq" class="hover:text-purple-600 transition">FAQ</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="font-semibold mb-5">Hubungi Kami</h2>
+                    <div class="space-y-2">
+                        <p>+62 812-3456-7890</p>
+                        <p>psb@sekolah.sch.id</p>
+                        <p class="max-w-48">Jl. Pendidikan No. 123, Kota, Indonesia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="pt-4 text-center pb-5">
+            Copyright 2025 © PSB Sekolah. All Rights Reserved.
+        </p>
+    </footer>
+
+    <script src="{% static 'landing/script.js' %}"></script>
+
+</body>
+
+</html>

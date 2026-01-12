@@ -1,4 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from zainul.models import (
     TahunAkademik,
     Negara,
@@ -36,35 +38,98 @@ class TahunViewSet(ModelViewSet):
     queryset = TahunAkademik.objects.all()
     serializer_class = TahunAkademikSerializer
 
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
 
 class NegaraViewSet(ModelViewSet):
     queryset = Negara.objects.all()
     serializer_class = NegaraSerializer
 
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
 
 class ProvinsiViewSet(ModelViewSet):
-    queryset = Provinsi.objects.all()
     serializer_class = ProvinsiSerializer
+    queryset = Provinsi.objects.all()
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        negara_id = self.request.query_params.get("negara")
+        if negara_id:
+            qs = qs.filter(negara_id=negara_id)
+        return qs
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 
 class KabupatenKotaViewSet(ModelViewSet):
-    queryset = KabupatenKota.objects.all()
     serializer_class = KabupatenKotaSerializer
+    queryset = KabupatenKota.objects.all()
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        provinsi_id = self.request.query_params.get("provinsi")
+        if provinsi_id:
+            qs = qs.filter(provinsi_id=provinsi_id)
+        return qs
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 
 class KecamatanViewSet(ModelViewSet):
-    queryset = Kecamatan.objects.all()
     serializer_class = KecamatanSerializer
+    queryset = Kecamatan.objects.all()
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        kabupaten_id = self.request.query_params.get("kabupaten")
+        if kabupaten_id:
+            qs = qs.filter(kabupaten_id=kabupaten_id)
+        return qs
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 
 class DesaKelurahanViewSet(ModelViewSet):
-    queryset = DesaKelurahan.objects.all()
     serializer_class = DesaKelurahanSerializer
+    queryset = DesaKelurahan.objects.all()
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        kecamatan_id = self.request.query_params.get("kecamatan")
+        if kecamatan_id:
+            qs = qs.filter(kecamatan_id=kecamatan_id)
+        return qs
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 
 class JurusanViewSet(ModelViewSet):
-    queryset = Jurusan.objects.all()
+    queryset = Jurusan.objects.filter(aktif=True)
     serializer_class = JurusanSerializer
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 
 class WaliViewSet(ModelViewSet):
@@ -124,6 +189,12 @@ class SiswaViewSet(ModelViewSet):
         "desa",
     )
     serializer_class = SiswaSerializer
+    parser_classes = [JSONParser, FormParser, MultiPartParser]
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 
 class BerkasViewSet(ModelViewSet):

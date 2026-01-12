@@ -14,15 +14,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     path("restapi/", include("restapizain.urls")),
-    path('restapi/api-auth/', include('rest_framework.urls')),
+    path("restapi/api-auth/", include("rest_framework.urls")),
+    path("", include("webzainul.urls")),  # Landing page at root
+    path("pendaftaran/", include("hasan.urls")),  # Registration at /pendaftaran/
 ]
 
 if settings.DEBUG:

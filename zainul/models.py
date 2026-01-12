@@ -174,7 +174,7 @@ class Siswa(models.Model):
     nama = models.CharField(max_length=120)
     nisn = models.CharField(max_length=20, unique=True)
     email = models.EmailField(blank=True, null=True)
-    tanggal_daftar = models.DateField(default=timezone.now)
+    tanggal_daftar = models.DateField(default=timezone.localdate)
     foto = models.ImageField(upload_to="gambar/foto", blank=True)
 
     tahun_akademik = models.ForeignKey(

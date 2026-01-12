@@ -1,0 +1,806 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran - PSB</title>
+    <meta name="description" content="Formulir Pendaftaran Siswa Baru - PSB">
+    <link rel="stylesheet" href="{% static 'landing/output.css' %}">
+    <link rel="shortcut icon" href="{% static 'landing/assets/favicon.ico' %}" type="image/x-icon">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, sans-serif;
+            color: #e2e8f0;
+        }
+
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .form-card {
+            background: rgba(30, 30, 50, 0.8);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #c084fc;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(147, 51, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+
+        .form-label .required {
+            color: #f87171;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 15, 30, 0.8);
+            border: 1px solid rgba(100, 100, 150, 0.3);
+            border-radius: 0.5rem;
+            color: #fff;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #9333ea;
+            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: #64748b;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .form-input:disabled,
+        .form-select:disabled,
+        .form-textarea:disabled {
+            background: rgba(15, 15, 30, 0.4);
+            border-color: rgba(100, 100, 150, 0.1);
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .file-upload {
+            border: 2px dashed rgba(147, 51, 234, 0.4);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-upload:hover {
+            border-color: #9333ea;
+            background: rgba(147, 51, 234, 0.1);
+        }
+
+        .file-upload-icon {
+            color: #9333ea;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-text {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #9333ea, #7c3aed);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .logo-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #9333ea, #7c3aed);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .back-link {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #c084fc;
+        }
+
+        .steps-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(147, 51, 234, 0.1);
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, #9333ea, #7c3aed);
+            color: #fff;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .login-link a {
+            color: #c084fc;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .error-text {
+            color: #f87171;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <!-- Back Link -->
+        <a href="{% url 'webzainul:index' %}" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="m15 18-6-6 6-6" />
+            </svg>
+            Kembali ke Beranda
+        </a>
+
+        <!-- Logo -->
+        <div style="text-align: center;">
+            <a href="{% url 'webzainul:index' %}" class="logo-link" style="justify-content: center;">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="white" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                        <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                    </svg>
+                </div>
+                <span class="logo-text">PSB</span>
+            </a>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <div class="form-header">
+                <h1>Formulir Pendaftaran</h1>
+                <p>Lengkapi data berikut untuk mendaftar sebagai siswa baru</p>
+            </div>
+
+            <!-- Steps Indicator -->
+            <div class="steps-indicator">
+                <div class="step active">
+                    <span class="step-number">1</span>
+                    <span>Data Pribadi</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <span>Alamat</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <span>Berkas</span>
+                </div>
+            </div>
+
+            <!-- Alert Messages -->
+            <div id="alertContainer"></div>
+
+            <form id="pendaftaranForm" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Data Pribadi Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        Data Pribadi
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Nama Lengkap <span class="required">*</span></label>
+                            <input type="text" name="nama" id="nama" class="form-input"
+                                placeholder="Masukkan nama lengkap" required>
+                            <div class="error-text" id="error-nama"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">NISN <span class="required">*</span></label>
+                            <input type="text" name="nisn" id="nisn" class="form-input"
+                                placeholder="Masukkan 10 digit NISN" pattern="\d{10}" title="NISN harus 10 digit angka"
+                                inputmode="numeric" maxlength="10" required>
+                            <div class="error-text" id="error-nisn"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">NIK <span class="required">*</span></label>
+                            <input type="text" name="nik" id="nik" class="form-input"
+                                placeholder="Masukkan 16 digit NIK" pattern="\d{16}" title="NIK harus 16 digit angka"
+                                inputmode="numeric" maxlength="16" required>
+                            <div class="error-text" id="error-nik"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" id="email" class="form-input"
+                                placeholder="Masukkan email aktif">
+                            <div class="error-text" id="error-email"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tempat Lahir <span class="required">*</span></label>
+                            <input type="text" name="tempat_lahir" id="tempat_lahir" class="form-input"
+                                placeholder="Masukkan tempat lahir" required>
+                            <div class="error-text" id="error-tempat_lahir"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tanggal Lahir <span class="required">*</span></label>
+                            <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-input" required>
+                            <div class="error-text" id="error-tanggal_lahir"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Jenis Kelamin <span class="required">*</span></label>
+                            <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" required>
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
+                            </select>
+                            <div class="error-text" id="error-jenis_kelamin"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Agama</label>
+                            <select name="agama" id="agama" class="form-select">
+                                <option value="">Pilih Agama</option>
+                                <option value="Islam">Islam</option>
+                                <option value="Kristen">Kristen</option>
+                                <option value="Hindu">Hindu</option>
+                                <option value="Budha">Budha</option>
+                                <option value="Kongucu">Konghucu</option>
+                            </select>
+                            <div class="error-text" id="error-agama"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Akademik Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                        </svg>
+                        Data Akademik
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Tahun Akademik <span class="required">*</span></label>
+                            <select name="tahun_akademik_id" id="tahun_akademik_id" class="form-select" required>
+                                <option value="">Pilih Tahun Akademik</option>
+                            </select>
+                            <div class="error-text" id="error-tahun_akademik_id"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Jurusan <span class="required">*</span></label>
+                            <select name="jurusan_id" id="jurusan_id" class="form-select" required>
+                                <option value="">Pilih Jurusan</option>
+                            </select>
+                            <div class="error-text" id="error-jurusan_id"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alamat Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        Alamat
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Negara <span class="required">*</span></label>
+                            <select name="negara_id" id="negara_id" class="form-select" required>
+                                <option value="">Pilih Negara</option>
+                            </select>
+                            <div class="error-text" id="error-negara_id"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Provinsi <span class="required">*</span></label>
+                            <select name="provinsi_id" id="provinsi_id" class="form-select" disabled required>
+                                <option value="">Pilih Negara Terlebih Dahulu</option>
+                            </select>
+                            <div class="error-text" id="error-provinsi_id"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Kabupaten/Kota <span class="required">*</span></label>
+                            <select name="kabupaten_id" id="kabupaten_id" class="form-select" disabled required>
+                                <option value="">Pilih Provinsi Terlebih Dahulu</option>
+                            </select>
+                            <div class="error-text" id="error-kabupaten_id"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Kecamatan <span class="required">*</span></label>
+                            <select name="kecamatan_id" id="kecamatan_id" class="form-select" disabled required>
+                                <option value="">Pilih Kabupaten Terlebih Dahulu</option>
+                            </select>
+                            <div class="error-text" id="error-kecamatan_id"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Desa/Kelurahan <span class="required">*</span></label>
+                            <select name="desa_id" id="desa_id" class="form-select" disabled required>
+                                <option value="">Pilih Kecamatan Terlebih Dahulu</option>
+                            </select>
+                            <div class="error-text" id="error-desa_id"></div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label">Alamat Detail</label>
+                            <textarea name="alamat_detail" id="alamat_detail" class="form-textarea"
+                                placeholder="Masukkan alamat lengkap (RT/RW, Nama Jalan, No. Rumah, dll)"></textarea>
+                            <div class="error-text" id="error-alamat_detail"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Berkas Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+                            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                        </svg>
+                        Upload Berkas
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Pas Foto 3x4</label>
+                            <label class="file-upload" id="fotoUploadLabel">
+                                <input type="file" name="foto" id="foto" accept="image/*">
+                                <div class="file-upload-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        <polyline points="17 8 12 3 7 8" />
+                                        <line x1="12" x2="12" y1="3" y2="15" />
+                                    </svg>
+                                </div>
+                                <p class="file-upload-text" id="fotoText">Klik untuk upload foto<br><small>Format: JPG,
+                                        PNG (Maks.
+                                        2MB)</small></p>
+                            </label>
+                            <div class="error-text" id="error-foto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    Daftar Sekarang
+                </button>
+
+                <div class="login-link">
+                    Sudah memiliki akun? <a href="{% url 'webzainul:login' %}">Login di sini</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // API Base URL
+        const API = "/restapi";
+
+        // Helper function to fetch API list
+        async function apiList(url) {
+            try {
+                const res = await fetch(url, { credentials: "same-origin" });
+                const data = await res.json();
+                return Array.isArray(data) ? data : (data.results || []);
+            } catch (error) {
+                console.error("API Error:", error);
+                return [];
+            }
+        }
+
+        // Helper function to fill select dropdown
+        function fillSelect(selectEl, items, placeholder, idField = 'id', nameField = 'nama') {
+            selectEl.innerHTML = `<option value="">${placeholder}</option>`;
+            items.forEach(item => {
+                const opt = document.createElement("option");
+                opt.value = item[idField];
+                opt.textContent = item[nameField];
+                selectEl.appendChild(opt);
+            });
+        }
+
+        // DOM Elements
+        const negaraSelect = document.getElementById("negara_id");
+        const provinsiSelect = document.getElementById("provinsi_id");
+        const kabupatenSelect = document.getElementById("kabupaten_id");
+        const kecamatanSelect = document.getElementById("kecamatan_id");
+        const desaSelect = document.getElementById("desa_id");
+        const tahunSelect = document.getElementById("tahun_akademik_id");
+        const jurusanSelect = document.getElementById("jurusan_id");
+        const form = document.getElementById("pendaftaranForm");
+        const submitBtn = document.getElementById("submitBtn");
+        const alertContainer = document.getElementById("alertContainer");
+
+        // Load initial data
+        async function loadInitialData() {
+            // Load Negara
+            const negara = await apiList(`${API}/negara/`);
+            fillSelect(negaraSelect, negara, "Pilih Negara");
+
+            // Load Tahun Akademik
+            const tahun = await apiList(`${API}/tahun/`);
+            fillSelect(tahunSelect, tahun, "Pilih Tahun Akademik");
+
+            // Load Jurusan
+            const jurusan = await apiList(`${API}/jurusan/`);
+            fillSelect(jurusanSelect, jurusan, "Pilih Jurusan");
+        }
+
+        // Cascading dropdown handlers
+        async function loadProvinsi(negaraId) {
+            fillSelect(provinsiSelect, [], "Pilih Negara Terlebih Dahulu");
+            fillSelect(kabupatenSelect, [], "Pilih Provinsi Terlebih Dahulu");
+            fillSelect(kecamatanSelect, [], "Pilih Kabupaten Terlebih Dahulu");
+            fillSelect(desaSelect, [], "Pilih Kecamatan Terlebih Dahulu");
+
+            provinsiSelect.disabled = true;
+            kabupatenSelect.disabled = true;
+            kecamatanSelect.disabled = true;
+            desaSelect.disabled = true;
+
+            if (!negaraId) return;
+
+            provinsiSelect.innerHTML = '<option value="">Memuat...</option>';
+            const provinsi = await apiList(`${API}/provinsi/?negara=${negaraId}`);
+            fillSelect(provinsiSelect, provinsi, "Pilih Provinsi");
+            provinsiSelect.disabled = false;
+        }
+
+        async function loadKabupaten(provinsiId) {
+            fillSelect(kabupatenSelect, [], "Pilih Provinsi Terlebih Dahulu");
+            fillSelect(kecamatanSelect, [], "Pilih Kabupaten Terlebih Dahulu");
+            fillSelect(desaSelect, [], "Pilih Kecamatan Terlebih Dahulu");
+
+            kabupatenSelect.disabled = true;
+            kecamatanSelect.disabled = true;
+            desaSelect.disabled = true;
+
+            if (!provinsiId) return;
+
+            kabupatenSelect.innerHTML = '<option value="">Memuat...</option>';
+            const kabupaten = await apiList(`${API}/kabupaten-kota/?provinsi=${provinsiId}`);
+            fillSelect(kabupatenSelect, kabupaten, "Pilih Kabupaten/Kota");
+            kabupatenSelect.disabled = false;
+        }
+
+        async function loadKecamatan(kabupatenId) {
+            fillSelect(kecamatanSelect, [], "Pilih Kabupaten Terlebih Dahulu");
+            fillSelect(desaSelect, [], "Pilih Kecamatan Terlebih Dahulu");
+
+            kecamatanSelect.disabled = true;
+            desaSelect.disabled = true;
+
+            if (!kabupatenId) return;
+
+            kecamatanSelect.innerHTML = '<option value="">Memuat...</option>';
+            const kecamatan = await apiList(`${API}/kecamatan/?kabupaten=${kabupatenId}`);
+            fillSelect(kecamatanSelect, kecamatan, "Pilih Kecamatan");
+            kecamatanSelect.disabled = false;
+        }
+
+        async function loadDesa(kecamatanId) {
+            fillSelect(desaSelect, [], "Pilih Kecamatan Terlebih Dahulu");
+
+            desaSelect.disabled = true;
+
+            if (!kecamatanId) return;
+
+            desaSelect.innerHTML = '<option value="">Memuat...</option>';
+            const desa = await apiList(`${API}/desa-kelurahan/?kecamatan=${kecamatanId}`);
+            fillSelect(desaSelect, desa, "Pilih Desa/Kelurahan");
+            desaSelect.disabled = false;
+        }
+
+        // Event listeners for cascading dropdowns
+        negaraSelect.addEventListener("change", () => loadProvinsi(negaraSelect.value));
+        provinsiSelect.addEventListener("change", () => loadKabupaten(provinsiSelect.value));
+        kabupatenSelect.addEventListener("change", () => loadKecamatan(kabupatenSelect.value));
+        kecamatanSelect.addEventListener("change", () => loadDesa(kecamatanSelect.value));
+
+        // File upload display
+        document.getElementById("foto").addEventListener("change", function (e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : "Klik untuk upload foto";
+            document.getElementById("fotoText").innerHTML = e.target.files[0]
+                ? `<strong>${fileName}</strong><br><small>File terpilih</small>`
+                : `Klik untuk upload foto<br><small>Format: JPG, PNG (Maks. 2MB)</small>`;
+        });
+
+        // Show alert
+        function showAlert(message, type = 'error') {
+            alertContainer.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+        }
+
+        // Clear errors
+        function clearErrors() {
+            document.querySelectorAll('.error-text').forEach(el => el.textContent = '');
+            alertContainer.innerHTML = '';
+        }
+
+        // Show field errors
+        function showFieldErrors(errors) {
+            for (const [field, messages] of Object.entries(errors)) {
+                const errorEl = document.getElementById(`error-${field}`);
+                if (errorEl) {
+                    errorEl.textContent = Array.isArray(messages) ? messages.join(', ') : messages;
+                }
+            }
+        }
+
+        // Form submission
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            clearErrors();
+
+            const formData = new FormData(form);
+
+            // Remove empty optional fields
+            const optionalFields = ['wali_id', 'email', 'agama', 'alamat_detail'];
+            optionalFields.forEach(field => {
+                if (!formData.get(field)) {
+                    formData.delete(field);
+                }
+            });
+
+            // Remove CSRF token from form data (not needed for API)
+            formData.delete('csrfmiddlewaretoken');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Memproses...';
+
+            try {
+                const response = await fetch(`${API}/siswa/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: formData,
+                    credentials: 'same-origin'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Success - redirect to success page
+                    window.location.href = `/pendaftaran/sukses/${result.id}/`;
+                } else {
+                    // Show errors
+                    if (typeof result === 'object') {
+                        showFieldErrors(result);
+                        if (result.detail) {
+                            showAlert(result.detail);
+                        } else if (result.non_field_errors) {
+                            showAlert(result.non_field_errors.join(', '));
+                        } else {
+                            showAlert('Periksa data yang Anda masukkan.');
+                        }
+                    } else {
+                        showAlert('Terjadi kesalahan saat menyimpan data.');
+                    }
+                }
+            } catch (error) {
+                console.error('Submit error:', error);
+                showAlert('Gagal terhubung ke server. Silakan coba lagi.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Daftar Sekarang';
+            }
+        });
+
+        // Force numeric-only input for NIK and NISN
+        const enforceNumeric = (el) => {
+            el.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        };
+
+        const nikInput = document.getElementById("nik");
+        const nisnInput = document.getElementById("nisn");
+        if (nikInput) enforceNumeric(nikInput);
+        if (nisnInput) enforceNumeric(nisnInput);
+
+        // Initialize on page load
+        document.addEventListener("DOMContentLoaded", loadInitialData);
+    </script>
+</body>
+
+</html>
