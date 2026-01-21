@@ -200,3 +200,42 @@ class SiswaViewSet(ModelViewSet):
 class BerkasViewSet(ModelViewSet):
     queryset = Berkas.objects.all().select_related("siswa", "jenis")
     serializer_class = BerkasSerializer
+
+
+class PendaftarMeView(APIView):
+    """
+    API endpoint untuk mengambil data siswa berdasarkan user yang login.
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        # Debug logging
+        print(
+            f"[DEBUG] PendaftarMeView - User: {request.user} (ID: {request.user.id if request.user.is_authenticated else 'Anonymous'})"
+        )
+
+        try:
+            siswa = (
+                Siswa.objects.select_related(
+                    "tahun_akademik",
+                    "jurusan",
+                    "wali",
+                    "negara",
+                    "provinsi",
+                    "kabupaten",
+                    "kecamatan",
+                    "desa",
+                )
+                .prefetch_related("berkas__jenis")
+                .get(user=request.user)
+            )
+            print(f"[DEBUG] Found Siswa: {siswa.nama} (ID: {siswa.id})")
+            serializer = SiswaSerializer(siswa)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Siswa.DoesNotExist:
+            print(f"[DEBUG] No Siswa found for user {request.user}")
+            return Response(
+                {"detail": "Data pendaftar tidak ditemukan untuk akun ini."},
+                status=status.HTTP_404_NOT_FOUND,
+            )

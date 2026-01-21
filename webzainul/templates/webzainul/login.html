@@ -1,66 +1,34 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - PSB</title>
-    <meta name="description" content="Login Pendaftaran Siswa Baru - PSB">
     <link rel="stylesheet" href="{% static 'landing/output.css' %}">
     <link rel="shortcut icon" href="{% static 'landing/assets/favicon.ico' %}" type="image/x-icon">
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            background: #0a0a0f;
             min-height: 100vh;
-            font-family: system-ui, -apple-system, sans-serif;
-            color: #e2e8f0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #e4e4e7;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            padding: 2rem 1rem;
         }
 
         .login-container {
             width: 100%;
-            max-width: 420px;
-        }
-
-        .login-card {
-            background: rgba(30, 30, 50, 0.8);
-            border: 1px solid rgba(147, 51, 234, 0.3);
-            border-radius: 1.5rem;
-            padding: 2.5rem 2rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .logo-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            margin-bottom: 2rem;
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #9333ea, #7c3aed);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-text {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #fff;
+            max-width: 400px;
         }
 
         .login-header {
@@ -68,16 +36,34 @@
             margin-bottom: 2rem;
         }
 
-        .login-header h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 0.5rem;
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
         }
 
-        .login-header p {
-            color: #94a3b8;
-            font-size: 0.95rem;
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.375rem;
+        }
+
+        .login-subtitle {
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+
+        .login-card {
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 12px;
+            padding: 1.5rem;
         }
 
         .form-group {
@@ -86,303 +72,237 @@
 
         .form-label {
             display: block;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             font-weight: 500;
-            color: #cbd5e1;
+            color: #a1a1aa;
             margin-bottom: 0.5rem;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #64748b;
         }
 
         .form-input {
             width: 100%;
-            padding: 0.875rem 1rem 0.875rem 2.75rem;
-            background: rgba(15, 15, 30, 0.8);
-            border: 1px solid rgba(100, 100, 150, 0.3);
-            border-radius: 0.75rem;
-            color: #fff;
-            font-size: 1rem;
-            transition: all 0.2s ease;
+            padding: 0.75rem 1rem;
+            background: #0f0f12;
+            border: 1px solid #27272a;
+            border-radius: 8px;
+            color: #e4e4e7;
+            font-size: 0.9rem;
+            transition: all 0.15s;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #9333ea;
-            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.2);
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
         }
 
         .form-input::placeholder {
-            color: #64748b;
+            color: #52525b;
         }
 
-        .password-toggle {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #64748b;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .password-toggle:hover {
-            color: #94a3b8;
-        }
-
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 0.875rem;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-
-        .remember-me input[type="checkbox"] {
-            width: 1rem;
-            height: 1rem;
-            accent-color: #9333ea;
-            cursor: pointer;
-        }
-
-        .remember-me span {
-            color: #94a3b8;
-        }
-
-        .forgot-link {
-            color: #c084fc;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .forgot-link:hover {
-            text-decoration: underline;
-        }
-
-        .btn-login {
+        .btn-submit {
             width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #9333ea, #7c3aed);
-            color: #fff;
-            font-weight: 600;
-            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
             border: none;
-            border-radius: 0.75rem;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.15s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
         }
 
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
+        .btn-submit:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 1.5rem 0;
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .divider::before,
-        .divider::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: rgba(100, 100, 150, 0.3);
+        .error-message {
+            padding: 0.75rem 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 8px;
+            color: #f87171;
+            font-size: 0.8rem;
+            margin-bottom: 1.25rem;
+            display: none;
         }
 
-        .divider span {
-            padding: 0 1rem;
-            color: #64748b;
+        .login-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .login-footer p {
+            color: #71717a;
             font-size: 0.875rem;
         }
 
-        .register-link {
-            text-align: center;
-            color: #94a3b8;
-            font-size: 0.95rem;
-        }
-
-        .register-link a {
-            color: #c084fc;
+        .login-footer a {
+            color: #8b5cf6;
             text-decoration: none;
             font-weight: 500;
         }
 
-        .register-link a:hover {
+        .login-footer a:hover {
             text-decoration: underline;
         }
 
         .back-link {
-            display: block;
-            text-align: center;
-            color: #64748b;
-            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            color: #71717a;
             font-size: 0.875rem;
+            text-decoration: none;
             margin-top: 1.5rem;
-            transition: color 0.2s;
+            transition: color 0.15s;
         }
 
         .back-link:hover {
-            color: #c084fc;
-        }
-
-        .alert {
-            padding: 0.875rem 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1.25rem;
-            font-size: 0.875rem;
-            display: none;
-        }
-
-        .alert-error {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-        }
-
-        .alert-success {
-            background: rgba(34, 197, 94, 0.15);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            color: #86efac;
+            color: #a1a1aa;
         }
     </style>
 </head>
 
 <body>
     <div class="login-container">
-        <!-- Logo -->
-        <a href="{% url 'webzainul:index' %}" class="logo-link">
-            <div class="logo-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
+        <div class="login-header">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="white" stroke-width="2">
                     <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
                     <path d="M6 12v5c3 3 9 3 12 0v-5" />
                 </svg>
             </div>
-            <span class="logo-text">PSB</span>
-        </a>
+            <h1 class="login-title">Masuk ke PSB</h1>
+            <p class="login-subtitle">Masukkan kredensial akun Anda</p>
+        </div>
 
-        <!-- Login Card -->
         <div class="login-card">
-            <div class="login-header">
-                <h1>Selamat Datang!</h1>
-                <p>Masuk ke akun pendaftaran Anda</p>
-            </div>
-
-            <!-- Alert Messages -->
-            <div class="alert alert-error" id="alertError">
-                Username atau password salah. Silakan coba lagi.
-            </div>
-
-            <form action="#" method="POST" id="loginForm">
+            <form id="loginForm">
                 {% csrf_token %}
-                <!-- Username -->
+
+                <div id="errorBox" class="error-message"></div>
+
                 <div class="form-group">
-                    <label class="form-label">Username</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
-                        </span>
-                        <input type="text" name="username" class="form-input" placeholder="Masukkan username" required>
-                    </div>
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" name="username" class="form-input" placeholder="Masukkan username"
+                        required autocomplete="username">
                 </div>
 
-                <!-- Password -->
                 <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2">
-                                <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                            </svg>
-                        </span>
-                        <input type="password" name="password" id="passwordInput" class="form-input"
-                            placeholder="Masukkan password" required>
-                        <button type="button" class="password-toggle" onclick="togglePassword()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon">
-                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                                <circle cx="12" cy="12" r="3" />
-                            </svg>
-                        </button>
-                    </div>
+                    <label class="form-label" for="password">Kata Sandi</label>
+                    <input type="password" id="password" name="password" class="form-input"
+                        placeholder="Masukkan kata sandi" required autocomplete="current-password">
                 </div>
 
-                <!-- Options -->
-                <div class="form-options">
-                    <label class="remember-me">
-                        <input type="checkbox" name="remember">
-                        <span>Ingat saya</span>
-                    </label>
-                    <a href="#" class="forgot-link">Lupa password?</a>
-                </div>
-
-                <!-- Submit -->
-                <button type="submit" class="btn-login">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                        <polyline points="10 17 15 12 10 7" />
-                        <line x1="15" x2="3" y1="12" y2="12" />
-                    </svg>
+                <button type="submit" class="btn-submit" id="submitBtn">
                     Masuk
                 </button>
             </form>
-
-            <div class="divider">
-                <span>atau</span>
-            </div>
-
-            <div class="register-link">
-                Belum punya akun? <a href="{% url 'hasan:daftar' %}">Daftar di sini</a>
-            </div>
         </div>
 
-        <a href="{% url 'webzainul:index' %}" class="back-link">← Kembali ke Beranda</a>
+        <div class="login-footer">
+            <p>Belum punya akun? <a href="{% url 'hasan:daftar' %}">Daftar sekarang</a></p>
+            <a href="{% url 'webzainul:index' %}" class="back-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="m12 19-7-7 7-7" />
+                    <path d="M19 12H5" />
+                </svg>
+                Kembali ke Beranda
+            </a>
+        </div>
     </div>
 
     <script>
-        function togglePassword() {
-            const passwordInput = document.getElementById('passwordInput');
-            const eyeIcon = document.getElementById('eyeIcon');
+        const API_BASE = '/restapi';
 
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" x2="23" y1="1" y2="23"/>';
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.innerHTML = '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
-            }
+        function showError(msg) {
+            const box = document.getElementById('errorBox');
+            box.textContent = msg;
+            box.style.display = 'block';
         }
+
+        function hideError() {
+            document.getElementById('errorBox').style.display = 'none';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+
+            if (!username || !password) {
+                showError('Username dan kata sandi harus diisi.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Memproses...
+            `;
+
+            try {
+                // Clear old tokens
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+
+                const response = await fetch(`${API_BASE}/jwt/token/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ username, password }),
+                    credentials: 'same-origin'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('access_token', data.access);
+                    localStorage.setItem('refresh_token', data.refresh);
+                    window.location.href = '/dashboard/';
+                } else {
+                    let errorMsg = 'Username atau kata sandi salah.';
+                    if (data.detail) {
+                        if (data.detail.includes('No active account') || data.detail.includes('credentials')) {
+                            errorMsg = 'Username atau kata sandi yang Anda masukkan salah.';
+                        } else if (data.detail.includes('blank')) {
+                            errorMsg = 'Username dan kata sandi tidak boleh kosong.';
+                        } else {
+                            errorMsg = data.detail;
+                        }
+                    }
+                    showError(errorMsg);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Tidak dapat terhubung ke server. Coba lagi nanti.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
     </script>
 </body>
 

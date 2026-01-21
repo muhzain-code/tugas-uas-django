@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.conf import settings
 
 
 # ===============================
@@ -219,6 +220,16 @@ class Siswa(models.Model):
         max_length=20,
         choices=STATUS_CHOICES,
         default="DAFTAR",
+    )
+
+    # User account for login
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="siswa",
+        help_text="Akun login untuk pendaftar",
     )
 
     # Alamat bertingkat

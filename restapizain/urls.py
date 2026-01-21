@@ -14,6 +14,7 @@ from .views import (
     BerkasViewSet,
     LogoutTokenView,
     LogoutJWTView,
+    PendaftarMeView,
 )
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -38,4 +39,5 @@ urlpatterns = [
     path("jwt/token/", TokenObtainPairView.as_view(), name="jwt_obtain_pair"),
     path("jwt/refresh/", TokenRefreshView.as_view(), name="jwt_refresh"),
     path("jwt/logout/", LogoutJWTView.as_view(), name="jwt_logout"),
+    path("pendaftar/me/", PendaftarMeView.as_view(), name="pendaftar_me"),
 ]

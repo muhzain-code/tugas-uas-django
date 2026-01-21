@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from zainul.models import (
     TahunAkademik,
     Negara,
@@ -76,6 +77,7 @@ class JenisBerkasSerializer(serializers.ModelSerializer):
         model = JenisBerkas
         fields = "__all__"
 
+
 class BerkasSerializer(serializers.ModelSerializer):
     jenis = JenisBerkasSerializer(read_only=True)
     jenis_id = serializers.PrimaryKeyRelatedField(
@@ -117,6 +119,15 @@ class SiswaSerializer(serializers.ModelSerializer):
     wali = WaliSerializer(read_only=True)
 
     berkas = BerkasSerializer(many=True, read_only=True)
+
+    # User registration fields (write-only)
+    username = serializers.CharField(write_only=True, required=True, max_length=150)
+    password = serializers.CharField(
+        write_only=True, required=True, min_length=8, style={"input_type": "password"}
+    )
+    confirm_password = serializers.CharField(
+        write_only=True, required=True, style={"input_type": "password"}
+    )
 
     negara_id = serializers.PrimaryKeyRelatedField(
         source="negara", queryset=Negara.objects.all(), write_only=True, required=False
@@ -195,8 +206,12 @@ class SiswaSerializer(serializers.ModelSerializer):
             "alamat_detail",
             "alamat_lengkap",
             "berkas",
+            # User registration fields
+            "username",
+            "password",
+            "confirm_password",
         ]
-        read_only_fields = ["alamat_lengkap", "tanggal_daftar"]
+        read_only_fields = ["alamat_lengkap", "tanggal_daftar", "status_pendaftaran"]
 
     def validate(self, data):
         negara = data.get("negara") or getattr(self.instance, "negara", None)
@@ -206,4 +221,70 @@ class SiswaSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Provinsi tidak sesuai dengan negara yang dipilih."
             )
+
+        # Validate password match
+        password = data.get("password")
+        confirm_password = data.get("confirm_password")
+        if password and confirm_password and password != confirm_password:
+            raise serializers.ValidationError(
+                {"confirm_password": "Password tidak cocok."}
+            )
+
+        # Validate username uniqueness
+        username = data.get("username")
+        if username and User.objects.filter(username=username).exists():
+            raise serializers.ValidationError({"username": "Username sudah digunakan."})
+
         return data
+
+    def create(self, validated_data):
+        # Extract user registration fields
+        username = validated_data.pop("username", None)
+        password = validated_data.pop("password", None)
+        validated_data.pop("confirm_password", None)  # Remove confirm_password
+
+        # Extract foto from validated_data
+        foto_file = validated_data.pop("foto", None)
+
+        # Create Django User first
+        user = None
+        if username and password:
+            user = User.objects.create_user(
+                username=username,
+                password=password,
+                email=validated_data.get("email", ""),
+                first_name=validated_data.get("nama", "")[
+                    :30
+                ],  # Store name for reference
+                is_active=True,  # Ensure user is active
+            )
+            validated_data["user"] = user
+
+        # Create Siswa instance
+        siswa = super().create(validated_data)
+
+        # If foto was uploaded, also create a Berkas record
+        if foto_file:
+            # Re-assign foto to siswa (it was popped)
+            siswa.foto = foto_file
+            siswa.save()
+
+            # Create Berkas record
+            jenis_foto, _ = JenisBerkas.objects.get_or_create(
+                kode="foto",
+                defaults={
+                    "nama": "Pas Foto",
+                    "deskripsi": "Foto 3x4 untuk pendaftaran",
+                    "wajib": False,
+                    "aktif": True,
+                    "urutan": 1,
+                },
+            )
+            Berkas.objects.create(
+                siswa=siswa,
+                jenis=jenis_foto,
+                file=foto_file,
+                keterangan="Upload otomatis saat pendaftaran",
+            )
+
+        return siswa

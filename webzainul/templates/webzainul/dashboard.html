@@ -1,0 +1,684 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PSB</title>
+    <link rel="stylesheet" href="{% static 'landing/output.css' %}">
+    <link rel="shortcut icon" href="{% static 'landing/assets/favicon.ico' %}" type="image/x-icon">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #0a0a0f;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #e4e4e7;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(10, 10, 15, 0.95);
+            border-bottom: 1px solid #27272a;
+            padding: 0.875rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .nav-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-logout {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Main */
+        .main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 4rem;
+        }
+
+        /* Header */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .page-subtitle {
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-dot.pending {
+            background: #3b82f6;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+        }
+
+        .status-dot.verified {
+            background: #22c55e;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+        }
+
+        .status-dot.rejected {
+            background: #ef4444;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+        }
+
+        .status-text {
+            flex: 1;
+        }
+
+        .status-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .status-desc {
+            font-size: 0.8rem;
+            color: #71717a;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.625rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 9999px;
+        }
+
+        .status-badge.pending {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+        }
+
+        .status-badge.verified {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+
+        .status-badge.rejected {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
+        /* Card */
+        .card {
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #27272a;
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+        }
+
+        .card-icon {
+            color: #a1a1aa;
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        /* Profile */
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid #27272a;
+        }
+
+        .profile-photo {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #27272a;
+            flex-shrink: 0;
+        }
+
+        .profile-info h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.125rem;
+        }
+
+        .profile-info p {
+            font-size: 0.8rem;
+            color: #71717a;
+        }
+
+        .profile-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.375rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #a78bfa;
+        }
+
+        /* Data Grid */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .data-item {
+            padding: 0.875rem;
+            background: #0f0f12;
+            border-radius: 8px;
+        }
+
+        .data-item.full {
+            grid-column: 1 / -1;
+        }
+
+        .data-label {
+            font-size: 0.7rem;
+            color: #52525b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .data-value {
+            font-size: 0.875rem;
+            color: #e4e4e7;
+        }
+
+        /* Contact */
+        .contact-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #0f0f12;
+            border-radius: 8px;
+        }
+
+        .contact-icon {
+            width: 32px;
+            height: 32px;
+            background: #27272a;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #71717a;
+            flex-shrink: 0;
+        }
+
+        .contact-text h4 {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #e4e4e7;
+        }
+
+        .contact-text p {
+            font-size: 0.75rem;
+            color: #52525b;
+        }
+
+        /* States */
+        .state-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 50vh;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #27272a;
+            border-top-color: #8b5cf6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .state-text {
+            color: #71717a;
+            font-size: 0.875rem;
+        }
+
+        .error-title {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #f87171;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.15s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: #a1a1aa;
+        }
+
+        .btn-ghost:hover {
+            background: #18181b;
+            color: #fff;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'webzainul:index' %}" class="nav-brand">
+                <div class="nav-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="white" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                        <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                    </svg>
+                </div>
+                PSB
+            </a>
+            <div class="nav-actions">
+                <button id="logoutBtn" class="btn-logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" x2="9" y1="12" y2="12" />
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading -->
+    <div id="loadingState" class="state-container">
+        <div class="spinner"></div>
+        <p class="state-text">Memuat data...</p>
+    </div>
+
+    <!-- Error -->
+    <div id="errorState" class="state-container" style="display: none;">
+        <h2 class="error-title">Data Tidak Ditemukan</h2>
+        <p class="state-text" id="errorMessage">Tidak dapat menemukan data pendaftaran.</p>
+        <div class="error-actions">
+            <a href="{% url 'hasan:daftar' %}" class="btn btn-primary">Daftar</a>
+            <a href="{% url 'webzainul:index' %}" class="btn btn-ghost">Kembali</a>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <main id="dashboardContent" class="main" style="display: none;">
+        <div class="page-header">
+            <h1 class="page-title" id="welcomeText">Dashboard</h1>
+            <p class="page-subtitle">Kelola dan pantau status pendaftaran Anda</p>
+        </div>
+
+        <!-- Status -->
+        <div class="status-bar">
+            <div class="status-dot pending" id="statusDot"></div>
+            <div class="status-text">
+                <div class="status-title" id="statusTitle">Menunggu Verifikasi</div>
+                <div class="status-desc" id="statusDesc">Data sedang diverifikasi tim kami</div>
+            </div>
+            <span class="status-badge pending" id="statusBadge">Pending</span>
+        </div>
+
+        <!-- Data Diri -->
+        <div class="card">
+            <div class="card-header">
+                <svg class="card-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                <h3 class="card-title">Data Pendaftar</h3>
+            </div>
+            <div class="card-body">
+                <div class="profile">
+                    <img id="fotoPreview" class="profile-photo" src="{% static 'landing/assets/favicon.ico' %}"
+                        alt="Foto">
+                    <div class="profile-info">
+                        <h3 id="profileName">-</h3>
+                        <p id="profileEmail">-</p>
+                        <span class="profile-tag" id="profileJurusan">-</span>
+                    </div>
+                </div>
+                <div class="data-grid">
+                    <div class="data-item">
+                        <div class="data-label">NIK</div>
+                        <div class="data-value" id="nik">-</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">NISN</div>
+                        <div class="data-value" id="nisn">-</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">Jenis Kelamin</div>
+                        <div class="data-value" id="jenisKelamin">-</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">TTL</div>
+                        <div class="data-value" id="ttl">-</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">Agama</div>
+                        <div class="data-value" id="agama">-</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">Tanggal Daftar</div>
+                        <div class="data-value" id="tanggalDaftar">-</div>
+                    </div>
+                    <div class="data-item full">
+                        <div class="data-label">Alamat</div>
+                        <div class="data-value" id="alamatLengkap">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kontak -->
+        <div class="card">
+            <div class="card-header">
+                <svg class="card-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3" />
+                </svg>
+                <h3 class="card-title">Bantuan</h3>
+            </div>
+            <div class="card-body">
+                <div class="contact-list">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2">
+                                <rect width="20" height="16" x="2" y="4" rx="2" />
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                            </svg>
+                        </div>
+                        <div class="contact-text">
+                            <h4>Email</h4>
+                            <p>psb@sekolah.sch.id</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3" />
+                            </svg>
+                        </div>
+                        <div class="contact-text">
+                            <h4>WhatsApp</h4>
+                            <p>+62 812-3456-7890</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                        </div>
+                        <div class="contact-text">
+                            <h4>Jam Kerja</h4>
+                            <p>Sen-Jum, 08.00-16.00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API = '/restapi';
+
+        async function fetchData() {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = '{% url "webzainul:login" %}';
+                return null;
+            }
+            try {
+                const res = await fetch(`${API}/pendaftar/me/`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.status === 401) {
+                    const rt = localStorage.getItem('refresh_token');
+                    if (rt) {
+                        const ref = await fetch(`${API}/jwt/refresh/`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ refresh: rt })
+                        });
+                        if (ref.ok) {
+                            const d = await ref.json();
+                            localStorage.setItem('access_token', d.access);
+                            return fetchData();
+                        }
+                    }
+                    localStorage.clear();
+                    window.location.href = '{% url "webzainul:login" %}';
+                    return null;
+                }
+                if (!res.ok) throw new Error((await res.json()).detail || 'Error');
+                return await res.json();
+            } catch (e) {
+                throw e;
+            }
+        }
+
+        function formatDate(d) {
+            if (!d) return '-';
+            return new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function render(data) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'block';
+
+            document.getElementById('welcomeText').textContent = data.nama;
+
+            // Status
+            const s = data.status_pendaftaran || 'DAFTAR';
+            const cfg = {
+                'DAFTAR': { cls: 'pending', title: 'Menunggu Verifikasi', desc: 'Data sedang diverifikasi tim kami', badge: 'Pending' },
+                'VERIFIKASI': { cls: 'verified', title: 'Terverifikasi', desc: 'Pendaftaran Anda telah diterima', badge: 'Verified' },
+                'DITOLAK': { cls: 'rejected', title: 'Ditolak', desc: 'Hubungi admin untuk info lebih lanjut', badge: 'Rejected' }
+            }[s] || cfg['DAFTAR'];
+
+            document.getElementById('statusDot').className = `status-dot ${cfg.cls}`;
+            document.getElementById('statusTitle').textContent = cfg.title;
+            document.getElementById('statusDesc').textContent = cfg.desc;
+            document.getElementById('statusBadge').className = `status-badge ${cfg.cls}`;
+            document.getElementById('statusBadge').textContent = cfg.badge;
+
+            // Profile
+            document.getElementById('profileName').textContent = data.nama || '-';
+            document.getElementById('profileEmail').textContent = data.email || '-';
+            document.getElementById('profileJurusan').textContent = data.jurusan?.nama || '-';
+            if (data.foto) document.getElementById('fotoPreview').src = data.foto;
+
+            // Data
+            document.getElementById('nik').textContent = data.nik || '-';
+            document.getElementById('nisn').textContent = data.nisn || '-';
+            document.getElementById('jenisKelamin').textContent = data.jenis_kelamin === 'L' ? 'Laki-laki' : data.jenis_kelamin === 'P' ? 'Perempuan' : '-';
+            document.getElementById('ttl').textContent = `${data.tempat_lahir || '-'}, ${formatDate(data.tanggal_lahir)}`;
+            document.getElementById('agama').textContent = data.agama || '-';
+            document.getElementById('tanggalDaftar').textContent = formatDate(data.tanggal_daftar);
+            document.getElementById('alamatLengkap').textContent = data.alamat_lengkap || data.alamat_detail || '-';
+        }
+
+        function showError(msg) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'flex';
+            document.getElementById('errorMessage').textContent = msg;
+        }
+
+        document.getElementById('logoutBtn')?.addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '{% url "webzainul:index" %}';
+        });
+
+        (async () => {
+            try {
+                const data = await fetchData();
+                if (data) render(data);
+            } catch (e) {
+                showError(e.message || 'Gagal memuat data');
+            }
+        })();
+    </script>
+</body>
+
+</html>

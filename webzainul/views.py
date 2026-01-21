@@ -9,3 +9,8 @@ def index(request):
 def login_page(request):
     """Login page view"""
     return render(request, "webzainul/login.html")
+
+
+def dashboard_page(request):
+    """Dashboard page view for registered students"""
+    return render(request, "webzainul/dashboard.html")
