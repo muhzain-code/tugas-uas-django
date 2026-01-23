@@ -683,19 +683,297 @@
             }
         }
 
+
+
+        const enforceNumeric = (el) => el.addEventListener('input', (e) => e.target.value = e.target.value.replace(/\D/g, ''));
+        const nikInput = document.getElementById("nik");
+        const nisnInput = document.getElementById("nisn");
+        if (nikInput) enforceNumeric(nikInput);
+        if (nisnInput) enforceNumeric(nisnInput);
+
+        // ===================== VALIDASI PROFESIONAL =====================
+
+        // Utilitas validasi
+        const validators = {
+            required: (value, fieldName) => value.trim() ? null : `${fieldName} wajib diisi`,
+            minLength: (value, min, fieldName) => value.length >= min ? null : `${fieldName} minimal ${min} karakter`,
+            maxLength: (value, max, fieldName) => value.length <= max ? null : `${fieldName} maksimal ${max} karakter`,
+            exactLength: (value, len, fieldName) => value.length === len ? null : `${fieldName} harus ${len} digit`,
+            email: (value) => {
+                if (!value) return null;
+                const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return regex.test(value) ? null : 'Format email tidak valid (contoh: nama@email.com)';
+            },
+            numeric: (value, fieldName) => /^\d*$/.test(value) ? null : `${fieldName} hanya boleh berisi angka`,
+            alphaSpace: (value, fieldName) => /^[a-zA-Z\s'.,-]*$/.test(value) ? null : `${fieldName} hanya boleh berisi huruf dan spasi`,
+            passwordSimple: (value) => {
+                if (value.length < 8) return 'Password minimal 8 karakter';
+                return null;
+            },
+            passwordMatch: (pwd, confirm) => pwd === confirm ? null : 'Konfirmasi password tidak cocok'
+        };
+
+        // Set status field
+        function setFieldStatus(inputId, status, message = '') {
+            const input = document.getElementById(inputId);
+            const errorEl = document.getElementById(`error-${inputId}`);
+            if (!input) return;
+
+            input.style.borderColor = status === 'success' ? '#4ade80' : status === 'error' ? '#f87171' : '#d1d5db';
+
+            if (errorEl) {
+                if (status === 'success' && message) {
+                    errorEl.innerHTML = `<span style="color: #4ade80;">✓ ${message}</span>`;
+                } else if (status === 'error') {
+                    errorEl.innerHTML = `<span style="color: #f87171;">${message}</span>`;
+                } else {
+                    errorEl.textContent = '';
+                }
+            }
+        }
+
+        // Validasi individual field
+        function validateField(inputId, value, validations) {
+            for (const validation of validations) {
+                const error = validation(value);
+                if (error) {
+                    setFieldStatus(inputId, 'error', error);
+                    return false;
+                }
+            }
+            setFieldStatus(inputId, 'success', 'Valid');
+            return true;
+        }
+
+        // Setup real-time validation
+        function setupValidation(inputId, validations, successMsg = 'Valid') {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            input.addEventListener('blur', function () {
+                const value = this.value.trim();
+                if (!value && !validations.some(v => v.name === 'required')) {
+                    setFieldStatus(inputId, 'default');
+                    return;
+                }
+
+                for (const validation of validations) {
+                    const error = validation(value);
+                    if (error) {
+                        setFieldStatus(inputId, 'error', error);
+                        return;
+                    }
+                }
+                setFieldStatus(inputId, 'success', successMsg);
+            });
+
+            input.addEventListener('input', function () {
+                if (this.style.borderColor === 'rgb(248, 113, 113)') {
+                    this.style.borderColor = '#d1d5db';
+                    const errorEl = document.getElementById(`error-${inputId}`);
+                    if (errorEl) errorEl.textContent = '';
+                }
+            });
+        }
+
+        // Setup validasi untuk setiap field
+        setupValidation('nama', [
+            (v) => validators.required(v, 'Nama'),
+            (v) => validators.minLength(v, 3, 'Nama'),
+            (v) => validators.alphaSpace(v, 'Nama')
+        ], 'Nama valid');
+
+        setupValidation('nisn', [
+            (v) => validators.required(v, 'NISN'),
+            (v) => validators.numeric(v, 'NISN'),
+            (v) => validators.exactLength(v, 10, 'NISN')
+        ], 'NISN valid (10 digit)');
+
+        setupValidation('nik', [
+            (v) => validators.required(v, 'NIK'),
+            (v) => validators.numeric(v, 'NIK'),
+            (v) => validators.exactLength(v, 16, 'NIK')
+        ], 'NIK valid (16 digit)');
+
+        setupValidation('tempat_lahir', [
+            (v) => validators.required(v, 'Tempat lahir'),
+            (v) => validators.alphaSpace(v, 'Tempat lahir')
+        ], 'Valid');
+
+        setupValidation('email', [
+            (v) => validators.email(v)
+        ], 'Email valid');
+
+        setupValidation('username', [
+            (v) => validators.required(v, 'Username'),
+            (v) => validators.minLength(v, 4, 'Username'),
+            (v) => /^[a-zA-Z0-9_]+$/.test(v) ? null : 'Username hanya boleh huruf, angka, dan underscore'
+        ], 'Username valid');
+
+        // Validasi password sederhana (minimal 8 karakter)
+        const pwdInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirm_password');
+
+        pwdInput.addEventListener('input', function () {
+            const pwd = this.value;
+            if (!pwd) {
+                setFieldStatus('password', 'default');
+                return;
+            }
+
+            if (pwd.length >= 8) {
+                setFieldStatus('password', 'success', 'Password valid ✓');
+            } else {
+                setFieldStatus('password', 'error', `Password minimal 8 karakter (saat ini ${pwd.length} karakter)`);
+            }
+
+            // Re-validate confirm if filled
+            if (confirmInput.value) validatePasswordMatch();
+        });
+
+        function validatePasswordMatch() {
+            const pwd = pwdInput.value;
+            const confirm = confirmInput.value;
+
+            if (!confirm) {
+                setFieldStatus('confirm_password', 'default');
+                return;
+            }
+
+            if (pwd === confirm) {
+                setFieldStatus('confirm_password', 'success', 'Password cocok ✓');
+            } else {
+                setFieldStatus('confirm_password', 'error', 'Password tidak cocok');
+            }
+        }
+
+        confirmInput.addEventListener('input', validatePasswordMatch);
+
+        // Validasi select fields
+        ['jenis_kelamin', 'negara_id', 'provinsi_id', 'kabupaten_id', 'kecamatan_id', 'desa_id', 'tahun_akademik_id', 'jurusan_id'].forEach(id => {
+            const select = document.getElementById(id);
+            if (select) {
+                select.addEventListener('change', function () {
+                    if (this.value) {
+                        this.style.borderColor = '#4ade80';
+                    } else {
+                        this.style.borderColor = '#d1d5db';
+                    }
+                });
+            }
+        });
+
+        // Validasi tanggal lahir
+        const tglLahir = document.getElementById('tanggal_lahir');
+        if (tglLahir) {
+            tglLahir.addEventListener('change', function () {
+                const date = new Date(this.value);
+                const today = new Date();
+                const age = today.getFullYear() - date.getFullYear();
+
+                if (age < 5 || age > 25) {
+                    setFieldStatus('tanggal_lahir', 'error', 'Umur harus antara 5-25 tahun');
+                } else {
+                    setFieldStatus('tanggal_lahir', 'success', `Umur: ${age} tahun`);
+                }
+            });
+        }
+
+        // Validasi form sebelum submit
+        function validateAllFields() {
+            let isValid = true;
+            const errors = [];
+
+            // Required fields
+            const requiredFields = [
+                { id: 'nama', label: 'Nama Lengkap' },
+                { id: 'nisn', label: 'NISN' },
+                { id: 'nik', label: 'NIK' },
+                { id: 'jenis_kelamin', label: 'Jenis Kelamin' },
+                { id: 'tempat_lahir', label: 'Tempat Lahir' },
+                { id: 'tanggal_lahir', label: 'Tanggal Lahir' },
+                { id: 'negara_id', label: 'Negara' },
+                { id: 'provinsi_id', label: 'Provinsi' },
+                { id: 'kabupaten_id', label: 'Kabupaten/Kota' },
+                { id: 'kecamatan_id', label: 'Kecamatan' },
+                { id: 'desa_id', label: 'Desa/Kelurahan' },
+                { id: 'tahun_akademik_id', label: 'Tahun Akademik' },
+                { id: 'jurusan_id', label: 'Jurusan' },
+                { id: 'username', label: 'Username' },
+                { id: 'password', label: 'Password' },
+                { id: 'confirm_password', label: 'Konfirmasi Password' }
+            ];
+
+            requiredFields.forEach(field => {
+                const el = document.getElementById(field.id);
+                if (el && !el.value.trim()) {
+                    setFieldStatus(field.id, 'error', `${field.label} wajib diisi`);
+                    errors.push(field.label);
+                    isValid = false;
+                }
+            });
+
+            // Specific validations
+            const nisn = document.getElementById('nisn').value;
+            if (nisn && nisn.length !== 10) {
+                setFieldStatus('nisn', 'error', 'NISN harus 10 digit');
+                isValid = false;
+            }
+
+            const nik = document.getElementById('nik').value;
+            if (nik && nik.length !== 16) {
+                setFieldStatus('nik', 'error', 'NIK harus 16 digit');
+                isValid = false;
+            }
+
+            const email = document.getElementById('email').value;
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                setFieldStatus('email', 'error', 'Format email tidak valid');
+                isValid = false;
+            }
+
+            const pwd = document.getElementById('password').value;
+            const confirmPwd = document.getElementById('confirm_password').value;
+
+            if (pwd.length < 8) {
+                setFieldStatus('password', 'error', 'Password minimal 8 karakter');
+                errors.push('Password');
+                isValid = false;
+            }
+
+            if (pwd !== confirmPwd) {
+                setFieldStatus('confirm_password', 'error', 'Password tidak cocok dengan konfirmasi');
+                errors.push('Konfirmasi Password');
+                isValid = false;
+            }
+
+            if (!isValid && errors.length > 0) {
+                // Tampilkan pesan yang lebih informatif
+                if (errors.length === 1) {
+                    showAlert(`Mohon periksa: ${errors[0]}`);
+                } else if (errors.length <= 3) {
+                    showAlert(`Mohon lengkapi: ${errors.join(', ')}`);
+                } else {
+                    showAlert(`Mohon lengkapi ${errors.length} field yang ditandai merah`);
+                }
+                // Scroll ke field pertama yang error
+                const firstErrorField = document.querySelector('input[style*="rgb(248, 113, 113)"], select[style*="rgb(248, 113, 113)"]');
+                if (firstErrorField) {
+                    firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstErrorField.focus();
+                }
+            }
+
+            return isValid;
+        }
+
+        // Update form submit handler
         form.addEventListener("submit", async function (e) {
             e.preventDefault();
             clearErrors();
 
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
-            if (password !== confirmPassword) {
-                showFieldErrors({ confirm_password: 'Kata sandi tidak cocok.' });
-                showAlert('Pastikan kata sandi dan konfirmasi sama.');
-                return;
-            }
-            if (password.length < 8) {
-                showFieldErrors({ password: 'Kata sandi minimal 8 karakter.' });
+            // Validate all fields first
+            if (!validateAllFields()) {
                 return;
             }
 
@@ -704,6 +982,7 @@
                 if (!formData.get(f)) formData.delete(f);
             });
             formData.delete('csrfmiddlewaretoken');
+            // confirm_password dikirim ke server untuk validasi, server akan menghapusnya setelah validasi
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Memproses...';
@@ -722,53 +1001,33 @@
                     window.location.href = `/pendaftaran/sukses/${result.id}/`;
                 } else {
                     if (typeof result === 'object') {
-                        showFieldErrors(result);
-                        showAlert(result.detail || result.non_field_errors?.join(', ') || 'Periksa data Anda.');
+                        // Handle server-side validation errors (like duplicate NIK/NISN)
+                        for (const [field, messages] of Object.entries(result)) {
+                            const msg = Array.isArray(messages) ? messages.join(', ') : messages;
+                            if (field === 'nik') {
+                                setFieldStatus('nik', 'error', msg.includes('exists') ? 'NIK sudah terdaftar' : msg);
+                            } else if (field === 'nisn') {
+                                setFieldStatus('nisn', 'error', msg.includes('exists') ? 'NISN sudah terdaftar' : msg);
+                            } else if (field === 'username') {
+                                setFieldStatus('username', 'error', msg.includes('exists') ? 'Username sudah digunakan' : msg);
+                            } else {
+                                const el = document.getElementById(`error-${field}`);
+                                if (el) el.innerHTML = `<span style="color: #f87171;">${msg}</span>`;
+                            }
+                        }
+                        showAlert(result.detail || result.non_field_errors?.join(', ') || 'Periksa data yang ditandai merah.');
                     } else {
-                        showAlert('Terjadi kesalahan.');
+                        showAlert('Terjadi kesalahan. Silakan coba lagi.');
                     }
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('Gagal terhubung ke server.');
+                showAlert('Gagal terhubung ke server. Periksa koneksi internet Anda.');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Daftar Sekarang';
             }
         });
-
-        const enforceNumeric = (el) => el.addEventListener('input', (e) => e.target.value = e.target.value.replace(/\D/g, ''));
-        const nikInput = document.getElementById("nik");
-        const nisnInput = document.getElementById("nisn");
-        if (nikInput) enforceNumeric(nikInput);
-        if (nisnInput) enforceNumeric(nisnInput);
-
-        // Live Password Match Validation
-        const pwdInput = document.getElementById('password');
-        const confirmInput = document.getElementById('confirm_password');
-        const confirmErr = document.getElementById('error-confirm_password');
-
-        function validatePasswordMatch() {
-            const pwd = pwdInput.value;
-            const confirm = confirmInput.value;
-
-            if (!confirm) {
-                confirmErr.textContent = '';
-                confirmInput.style.borderColor = '#27272a';
-                return;
-            }
-
-            if (pwd === confirm) {
-                confirmErr.innerHTML = '<span style="color: #4ade80;">✓ Kata sandi cocok</span>';
-                confirmInput.style.borderColor = '#4ade80';
-            } else {
-                confirmErr.textContent = 'Kata sandi tidak cocok';
-                confirmInput.style.borderColor = '#f87171';
-            }
-        }
-
-        pwdInput.addEventListener('input', validatePasswordMatch);
-        confirmInput.addEventListener('input', validatePasswordMatch);
 
         document.addEventListener("DOMContentLoaded", loadInitialData);
     </script>
