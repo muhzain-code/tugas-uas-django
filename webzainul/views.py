@@ -14,3 +14,8 @@ def login_page(request):
 def dashboard_page(request):
     """Dashboard page view for registered students"""
     return render(request, "webzainul/dashboard.html")
+
+
+def forgot_password_page(request):
+    """Forgot password page view"""
+    return render(request, "webzainul/forgot_password.html")

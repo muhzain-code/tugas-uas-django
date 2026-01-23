@@ -17,7 +17,7 @@
         }
 
         body {
-            background: #0a0a0f;
+            background: linear-gradient(135deg, #0c0a1f 0%, #0f0d1a 50%, #0a0a0f 100%);
             min-height: 100vh;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             color: #e4e4e7;
@@ -25,6 +25,19 @@
             align-items: center;
             justify-content: center;
             padding: 2rem 1rem;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(34, 197, 94, 0.05) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .success-container {
@@ -299,9 +312,9 @@
             </div>
         </div>
 
-        <p class="footer-text">
+        <!-- <p class="footer-text">
             Butuh bantuan? <a href="#">Hubungi Admin</a>
-        </p>
+        </p> -->
     </div>
 </body>
 

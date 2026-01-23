@@ -6,4 +6,5 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("login/", views.login_page, name="login"),
     path("dashboard/", views.dashboard_page, name="dashboard"),
+    path("lupa-password/", views.forgot_password_page, name="forgot_password"),
 ]
